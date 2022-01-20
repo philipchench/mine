@@ -23,26 +23,40 @@ function setMines(rows, cols, mines, board) {
     if (!board[x][y][2]) {
       //if no bomb, place bomb
       board[x][y][2] = 1;
+      count++;
     }
   }
 }
 
-export function flipCell(x, y, board) {
-  if (!board[x][y][3]) {
-    return;
+export function flipCell(x, y, board, isState) {
+  let newboard = board;
+  if (isState) {
+    //only first call will make deep copy (can't directly alter React hook state)
+    //the rest of the calls can directly mutate newboard
+    newboard = [...board];
   }
-  setNum(x, y, board);
-  board[x][y][3] = 1;
+  setNum(x, y, newboard);
+  newboard[x][y][3] = 0;
+  if (newboard[x][y][4] == 0) {
+    for (let xNbr = -1; xNbr <= 1; xNbr++) {
+      for (let yNbr = -1; yNbr <= 1; yNbr++) {
+        if (newboard[x + xNbr]?.[y + yNbr] && newboard[x + xNbr][y + yNbr][3]) {
+          flipCell(x + xNbr, y + yNbr, newboard, false);
+        }
+      }
+    }
+  }
+  return newboard;
 }
 
 function setNum(x, y, board) {
   let bombCount = 0;
   for (let xNbr = -1; xNbr <= 1; xNbr++) {
     for (let yNbr = -1; yNbr <= 1; yNbr++) {
-      if (!board[x][y][2]) {
-        let bomb = board[xNbr]?.[yNbr][2];
-        if (bomb) {
+      if (board[x + xNbr]?.[y + yNbr]) {
+        if (board[x + xNbr][y + yNbr][2]) {
           bombCount++;
+        } else if (board[x + xNbr][y + yNbr][3]) {
         }
       }
     }

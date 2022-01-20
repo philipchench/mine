@@ -2,10 +2,22 @@
   text-align: center;
 }
 
+.topBar {
+  margin-top: 30px;
+}
+
+.board {
+  margin-top: 30px;
+}
+
 .row {
   display: flex;
+  justify-content: center;
 }
 
 .cell {
-  background-color: rgb(121, 121, 121);
+  background-color: rgb(194, 194, 194);
+  height: 30px;
+  width: 30px;
+  outline: 2px solid;
 }

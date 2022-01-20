@@ -10,15 +10,28 @@ function App() {
   const [mines, setMines] = useState(35);
   const [board, setBoard] = useState(BoardBuilder(rows, cols, mines));
 
-  const drawBoard = () => {
-    board.map((row) => {
-      return <Row rowData={row} />;
-    });
+  const flip = (x, y) => (e) => {
+    console.log("prev flip ", board[x][y][3]);
+    e.preventDefault();
+    console.log(x, y);
+    if (board[x][y][2]) {
+      const bombboard = [...board];
+      bombboard[x][y][3] = 0;
+      setBoard(bombboard);
+    } else if (board[x][y][3]) {
+      setBoard(flipCell(x, y, board, true));
+    }
+    console.log("post flip ", board[x][y][3]);
   };
 
   return (
     <div className="App">
-      <div>topbar</div>
+      <div className="topBar">topbar</div>
+      <div className="board">
+        {board.map((row) => {
+          return <Row key={row.toString()} rowData={row} clickFunc={flip} />;
+        })}
+      </div>
     </div>
   );
 }
