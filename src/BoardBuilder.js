@@ -1,5 +1,5 @@
 //builds a 2d array that contains board data
-export function BoardBuilder(rows, cols, mines) {
+export function boardBuilder(rows, cols, mines) {
   const board = [];
   //cell data: [row, col, minestatus, hiddenstatus, number, flag]
   for (let x = 0; x < rows; x++) {

@@ -9,7 +9,10 @@
 }
 
 .numbers {
+  background-color: black;
+  color: red;
   margin: 0px 100px;
+  width: 50px;
 }
 
 .startButton {

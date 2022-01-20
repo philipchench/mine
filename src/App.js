@@ -2,15 +2,25 @@ import logo from "./logo.svg";
 import "./App.css";
 import React, { useEffect, useState } from "react";
 import Row from "./Row";
-import { BoardBuilder, flipCell } from "./BoardBuilder";
+import { boardBuilder, flipCell } from "./BoardBuilder";
 
 function App() {
   const [rows, setRows] = useState(15);
   const [cols, setCols] = useState(15);
   const [mines, setMines] = useState(35);
-  const [board, setBoard] = useState(BoardBuilder(rows, cols, mines));
+  const [board, setBoard] = useState(boardBuilder(rows, cols, mines));
   const [stop, setStop] = useState(false);
   const [minesLeft, setMinesLeft] = useState(mines);
+  const [time, setTime] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (time < 1000) {
+        setTime(time + 1);
+      }
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [time]);
 
   const flip = (x, y) => (e) => {
     if (stop) {
@@ -46,12 +56,21 @@ function App() {
     }
   };
 
+  const restart = () => {
+    setStop(false);
+    setBoard(boardBuilder(rows, cols, mines));
+    setMinesLeft(mines);
+    setTime(0);
+  };
+
   return (
     <div className="App">
       <div className="topBar">
         <div className="numbers">{minesLeft}</div>
-        <button>😝</button>
-        <div className="numbers">count</div>
+        <button className="startButton" onClick={restart}>
+          😝
+        </button>
+        <div className="numbers">{time}</div>
       </div>
       <div className="board">
         {board.map((row) => {
