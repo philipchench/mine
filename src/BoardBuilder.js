@@ -1,12 +1,12 @@
 //builds a 2d array that contains board data
 export function BoardBuilder(rows, cols, mines) {
   const board = [];
-  //cell data: [row, col, minestatus, hiddenstatus, number]
+  //cell data: [row, col, minestatus, hiddenstatus, number, flag]
   for (let x = 0; x < rows; x++) {
     //create board of no mines
     let row = [];
     for (let y = 0; y < cols; y++) {
-      let cell = [x, y, 0, 1, 0];
+      let cell = [x, y, 0, 1, 0, false];
       row.push(cell);
     }
     board.push(row);

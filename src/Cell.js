@@ -1,6 +1,9 @@
-function Cell({ cellData, clickFunc }) {
+function Cell({ cellData, onClick, onContext }) {
   const setText = () => {
     if (cellData[3]) {
+      if (cellData[5]) {
+        return "🚩";
+      }
       return "";
     } else if (cellData[2]) {
       return "💣";
@@ -12,7 +15,8 @@ function Cell({ cellData, clickFunc }) {
   return (
     <div
       className="cell"
-      onClick={clickFunc(cellData[0], cellData[1])}
+      onClick={onClick(cellData[0], cellData[1])}
+      onContextMenu={onContext(cellData[0], cellData[1])}
       style={{
         cursor: cellData[3] ? "pointer" : "default",
       }}

@@ -4,6 +4,15 @@
 
 .topBar {
   margin-top: 30px;
+  display: flex;
+  justify-content: center;
+}
+
+.numbers {
+  margin: 0px 100px;
+}
+
+.startButton {
 }
 
 .board {
@@ -20,4 +29,5 @@
   height: 30px;
   width: 30px;
   outline: 2px solid;
+  outline-color: rgb(114, 114, 114);
 }
