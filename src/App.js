@@ -1,23 +1,25 @@
-import logo from './logo.svg';
-import './App.css';
+import logo from "./logo.svg";
+import "./App.css";
+import React, { useEffect, useState } from "react";
+import Row from "./Row";
+import { BoardBuilder, flipCell } from "./BoardBuilder";
 
 function App() {
+  const [rows, setRows] = useState(15);
+  const [cols, setCols] = useState(15);
+  const [mines, setMines] = useState(35);
+  const [board, setBoard] = useState(BoardBuilder(rows, cols, mines));
+
+  const drawBoard = () => {
+    board.map((row) => {
+      return <Row rowData={row} />;
+    });
+  };
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <div>topbar</div>
+      {drawBoard}
     </div>
   );
 }
