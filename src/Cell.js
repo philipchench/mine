@@ -1,4 +1,4 @@
-function Cell({ cellData, onClick, onContext }) {
+function Cell({ cellData, onClick, onContext, onmousedown }) {
   const setText = () => {
     if (cellData[3]) {
       if (cellData[5]) {
@@ -17,6 +17,7 @@ function Cell({ cellData, onClick, onContext }) {
       className="cell"
       onClick={onClick(cellData[0], cellData[1])}
       onContextMenu={onContext(cellData[0], cellData[1])}
+      onMouseDown={onmousedown}
       style={{
         cursor: cellData[3] ? "pointer" : "default",
       }}

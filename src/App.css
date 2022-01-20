@@ -1,5 +1,7 @@
 .App {
+  font-family: monospace;
   text-align: center;
+  font-size: 1.4em;
 }
 
 .topBar {
@@ -8,14 +10,18 @@
   justify-content: center;
 }
 
-.numbers {
+.number {
   background-color: black;
   color: red;
   margin: 0px 100px;
-  width: 50px;
+  width: 80px;
+  height: 30px;
+  border-radius: 5px;
 }
 
 .startButton {
+  width: 60px;
+  font-size: 1.4em;
 }
 
 .board {

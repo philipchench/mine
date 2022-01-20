@@ -2,75 +2,96 @@ import logo from "./logo.svg";
 import "./App.css";
 import React, { useEffect, useState } from "react";
 import Row from "./Row";
-import { boardBuilder, flipCell } from "./BoardBuilder";
+import {
+  boardBuilder,
+  plantMines,
+  flipCell,
+  revealMines,
+} from "./BoardBuilder";
 
 function App() {
-  const [rows, setRows] = useState(15);
-  const [cols, setCols] = useState(15);
-  const [mines, setMines] = useState(35);
-  const [board, setBoard] = useState(boardBuilder(rows, cols, mines));
-  const [stop, setStop] = useState(false);
-  const [minesLeft, setMinesLeft] = useState(mines);
-  const [time, setTime] = useState(0);
+  const [rows, setRows] = useState(15); //row count
+  const [cols, setCols] = useState(15); //col count
+  const [mines, setMines] = useState(55); //mine count
+  const [board, setBoard] = useState(boardBuilder(rows, cols, mines)); //board 2d array of data
+  const [stop, setStop] = useState(false); //is game over or not
+  const [fresh, setFresh] = useState(true); //started or not
+  const [minesLeft, setMinesLeft] = useState(mines); //mines left for display
+  const [time, setTime] = useState(0); //timer
+  const [emoji, setEmoji] = useState("😝"); //emoji on restart button
 
   useEffect(() => {
     const interval = setInterval(() => {
-      if (time < 1000) {
-        setTime(time + 1);
+      if (time < 1000 && !stop) {
+        setTime(time + 1); //increment time every second
       }
     }, 1000);
     return () => clearInterval(interval);
   }, [time]);
 
+  //what to do if flipped
   const flip = (x, y) => (e) => {
     if (stop) {
+      //game over, no more clicking
       return;
     }
-    console.log("prev flip ", board[x][y][3]);
     e.preventDefault();
-    console.log(x, y);
-    if (board[x][y][2]) {
-      const bombboard = [...board];
-      bombboard[x][y][3] = 0;
-      setBoard(bombboard);
-      setStop(true);
-    } else if (board[x][y][3]) {
-      setBoard(flipCell(x, y, board, true));
+    if (fresh) {
+      //if fresh, make cell and surrounding have no mines
+      setBoard(plantMines(rows, cols, x, y, mines, board));
+      setFresh(false); //not fresh anymore
     }
-    console.log("post flip ", board[x][y][3]);
+    if (board[x][y][2]) {
+      //if landed on mine procedure
+      setBoard(revealMines(rows, cols, board));
+      setStop(true);
+      setEmoji("😱");
+    } else if (board[x][y][3]) {
+      //no mine and still hidden procedure
+      setBoard(flipCell(x, y, board, true));
+      setEmoji("😝");
+    }
   };
-
+  //what to do if flagged
   const flag = (x, y) => (e) => {
     if (stop || !board[x][y][3]) {
+      //game over or if flipped already
       return;
     }
     e.preventDefault();
-    console.log(x, y);
     const flagBoard = [...board];
     flagBoard[x][y][5] = !flagBoard[x][y][5];
     setBoard(flagBoard);
     if (flagBoard[x][y][5]) {
-      setMinesLeft(minesLeft - 1);
+      setMinesLeft(minesLeft - 1); //decrement if not yet flagged
     } else {
-      setMinesLeft(minesLeft + 1);
+      setMinesLeft(minesLeft + 1); //increment if unflag
     }
   };
 
   const restart = () => {
     setStop(false);
+    setFresh(true);
     setBoard(boardBuilder(rows, cols, mines));
     setMinesLeft(mines);
     setTime(0);
+    setEmoji("😝");
+  };
+
+  const emojiWow = () => {
+    if (!stop) {
+      setEmoji("😮");
+    }
   };
 
   return (
     <div className="App">
       <div className="topBar">
-        <div className="numbers">{minesLeft}</div>
+        <div className="number">{minesLeft}</div>
         <button className="startButton" onClick={restart}>
-          😝
+          {emoji}
         </button>
-        <div className="numbers">{time}</div>
+        <div className="number">{time}</div>
       </div>
       <div className="board">
         {board.map((row) => {
@@ -80,6 +101,7 @@ function App() {
               rowData={row}
               onClick={flip}
               onContext={flag}
+              onmousedown={emojiWow}
             />
           );
         })}

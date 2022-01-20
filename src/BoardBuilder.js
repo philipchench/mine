@@ -1,5 +1,6 @@
 //builds a 2d array that contains board data
-export function boardBuilder(rows, cols, mines) {
+export function boardBuilder(rows, cols) {
+  console.log("boardbuilder");
   const board = [];
   //cell data: [row, col, minestatus, hiddenstatus, number, flag]
   for (let x = 0; x < rows; x++) {
@@ -11,21 +12,26 @@ export function boardBuilder(rows, cols, mines) {
     }
     board.push(row);
   }
-  setMines(rows, cols, mines, board);
   return board;
 }
 //sets mines on the board, mutates board
-function setMines(rows, cols, mines, board) {
+export function plantMines(rows, cols, x, y, mines, board) {
+  const newboard = [...board];
   let count = 0;
   while (count < mines) {
-    let x = Math.floor(Math.random() * rows);
-    let y = Math.floor(Math.random() * cols);
-    if (!board[x][y][2]) {
+    let mineX = Math.floor(Math.random() * rows);
+    let mineY = Math.floor(Math.random() * cols);
+    if (
+      !newboard[mineX][mineY][2] &&
+      !(Math.abs(mineX - x) <= 1 && Math.abs(mineY - y) <= 1)
+    ) {
       //if no bomb, place bomb
-      board[x][y][2] = 1;
+      console.log(mineX, mineY);
+      newboard[mineX][mineY][2] = 1;
       count++;
     }
   }
+  return newboard;
 }
 
 export function flipCell(x, y, board, isState) {
@@ -62,4 +68,30 @@ function setNum(x, y, board) {
     }
   }
   board[x][y][4] = bombCount;
+}
+
+export function safeStart(x, y, board) {
+  const newboard = [...board];
+  for (let xNbr = -1; xNbr <= 1; xNbr++) {
+    for (let yNbr = -1; yNbr <= 1; yNbr++) {
+      if (newboard[x + xNbr]?.[y + yNbr]) {
+        if (newboard[x + xNbr][y + yNbr][2]) {
+          newboard[x + xNbr][y + yNbr][2] = 0;
+        }
+      }
+    }
+  }
+  return newboard;
+}
+
+export function revealMines(rows, cols, board) {
+  const newboard = [...board];
+  for (let x = 0; x < rows; x++) {
+    for (let y = 0; y < cols; y++) {
+      if (newboard[x][y][2]) {
+        newboard[x][y][3] = 0;
+      }
+    }
+  }
+  return newboard;
 }

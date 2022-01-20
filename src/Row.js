@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Cell from "./Cell";
 
-function Row({ rowData, onClick, onContext }) {
+function Row({ rowData, onClick, onContext, onmousedown }) {
   return (
     <div className="row">
       {rowData.map((cell) => {
@@ -11,6 +11,7 @@ function Row({ rowData, onClick, onContext }) {
             cellData={cell}
             onClick={onClick}
             onContext={onContext}
+            onmousedown={onmousedown}
           />
         );
       })}
