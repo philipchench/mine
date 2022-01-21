@@ -1,7 +1,7 @@
 //builds a 2d array that contains board data
 export function boardBuilder(rows, cols) {
   const board = [];
-  //cell data: [row, col, isMine, isHidden, number, flag, red]
+  //cellData:[0row, 1col, 2isMine, 3isHidden, 4number, 5flag, 6red]
   for (let x = 0; x < rows; x++) {
     //create board of no mines
     let row = [];
@@ -47,16 +47,16 @@ export function flipCell(x, y, board, isState) {
     for (let xNbr = -1; xNbr <= 1; xNbr++) {
       for (let yNbr = -1; yNbr <= 1; yNbr++) {
         if (newboard[x + xNbr]?.[y + yNbr] && newboard[x + xNbr][y + yNbr][3]) {
-          const result = flipCell(x + xNbr, y + yNbr, newboard, false);
-          flipped += result[1];
+          const result = flipCell(x + xNbr, y + yNbr, newboard, false); //recursively run flip
+          flipped += result[1]; //increment flip by recursive run
         }
       }
     }
   }
-  console.log("fillpped", flipped);
-  return [newboard, flipped];
+  return [newboard, flipped]; //return board, and number of flips on this run
 }
 
+//set the number of current cell, counts neighboring mines
 function setNum(x, y, board) {
   let bombCount = 0;
   for (let xNbr = -1; xNbr <= 1; xNbr++) {
@@ -69,15 +69,16 @@ function setNum(x, y, board) {
       }
     }
   }
-  board[x][y][4] = bombCount;
+  board[x][y][4] = bombCount; //lastly, update
 }
 
+//reveal mines when click on mine (game over)
 export function revealMines(currX, currY, rows, cols, board) {
   const newboard = [...board];
   for (let x = 0; x < rows; x++) {
     for (let y = 0; y < cols; y++) {
       if (newboard[x][y][2]) {
-        newboard[x][y][3] = 0;
+        newboard[x][y][3] = 0; //uncover every mine
       }
     }
   }

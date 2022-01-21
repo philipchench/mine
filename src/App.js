@@ -23,7 +23,7 @@ function App() {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      if (time < 1000 && !stop) {
+      if (!stop) {
         setTime(time + 1); //increment time every second
       }
     }, 1000);
@@ -57,9 +57,7 @@ function App() {
       currUncovered += result[1];
     }
     setEmoji("😝"); //default smile to cancel wow face
-    console.log(uncovered);
     if (currUncovered >= rows * cols - mines) {
-      console.log("hi");
       setEmoji("😎");
       setStop(true);
     }
@@ -92,11 +90,22 @@ function App() {
     setEmoji("😝");
     setUncovered(0);
   };
+
   //self explanatory
   const emojiWow = (cell) => {
     if (!stop) {
       setEmoji("😮");
     }
+  };
+
+  //formats the time, makes it pretty
+  const timeFormatter = () => {
+    const minutes = Math.floor(time / 60);
+    const seconds = time - minutes * 60;
+    if (seconds < 10) {
+      return minutes + ":0" + seconds;
+    }
+    return minutes + ":" + seconds;
   };
 
   return (
@@ -106,7 +115,7 @@ function App() {
         <button className="startButton" onClick={restart}>
           {emoji}
         </button>
-        <div className="number">{time}</div>
+        <div className="number">{timeFormatter()}</div>
       </div>
       <div className="board">
         {board.map((row) => {

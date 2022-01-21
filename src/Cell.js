@@ -1,17 +1,21 @@
 function Cell({ cellData, onClick, onContext, onmousedown }) {
   const setText = () => {
     if (cellData[3]) {
+      //if covered
       if (cellData[5]) {
+        //if flagged
         return "🚩";
       }
       return "";
     } else if (cellData[2]) {
+      //if mine
       return "💣";
     } else {
       if (cellData[4] == 0) {
+        //if uncovered but number is 0
         return "";
       }
-      return cellData[4];
+      return cellData[4]; //if uncovered and has positive number
     }
   };
 
@@ -30,32 +34,3 @@ function Cell({ cellData, onClick, onContext, onmousedown }) {
 }
 
 export default Cell;
-
-//const [cellState, setCellState] = useState(0);
-//-3 is covered, -2 is flagged, -1 is current bomb,
-// 0~7 is number of cell if any
-// useEffect(() => {
-//   //set state for styles
-//   if (cellData[3]) {
-//     setCellState(-3);
-//     if (cellData[5]) {
-//       setCellState(-2);
-//     }
-//   } else if (cellData[2]) {
-//     setCellState(-1);
-//   } else if (!cellState) {
-//     setCellState(cellData[4]);
-//   }
-// });
-// const setText = () => {
-//   //set inner html text
-//   if (cellState == -3 || cellState == 0) {
-//     return "";
-//   } else if (cellState == -2) {
-//     return "🚩";
-//   } else if (cellState == -1) {
-//     return "💣";
-//   } else {
-//     return cellState;
-//   }
-// };
