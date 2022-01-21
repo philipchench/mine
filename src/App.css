@@ -39,4 +39,17 @@
   width: 30px;
   outline: 2px solid;
   outline-color: rgb(114, 114, 114);
+  color: rgb(82, 82, 82);
+  cursor: default;
+}
+.pointer {
+  cursor: pointer;
+}
+
+.unveiled {
+  background-color: rgb(172, 172, 172);
+}
+
+.red {
+  background-color: rgb(223, 78, 78);
 }

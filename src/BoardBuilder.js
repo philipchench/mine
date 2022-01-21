@@ -2,12 +2,12 @@
 export function boardBuilder(rows, cols) {
   console.log("boardbuilder");
   const board = [];
-  //cell data: [row, col, minestatus, hiddenstatus, number, flag]
+  //cell data: [row, col, isMine, isHidden, number, flag, red]
   for (let x = 0; x < rows; x++) {
     //create board of no mines
     let row = [];
     for (let y = 0; y < cols; y++) {
-      let cell = [x, y, 0, 1, 0, false];
+      let cell = [x, y, 0, 1, 0, false, false];
       row.push(cell);
     }
     board.push(row);
@@ -70,21 +70,7 @@ function setNum(x, y, board) {
   board[x][y][4] = bombCount;
 }
 
-export function safeStart(x, y, board) {
-  const newboard = [...board];
-  for (let xNbr = -1; xNbr <= 1; xNbr++) {
-    for (let yNbr = -1; yNbr <= 1; yNbr++) {
-      if (newboard[x + xNbr]?.[y + yNbr]) {
-        if (newboard[x + xNbr][y + yNbr][2]) {
-          newboard[x + xNbr][y + yNbr][2] = 0;
-        }
-      }
-    }
-  }
-  return newboard;
-}
-
-export function revealMines(rows, cols, board) {
+export function revealMines(currX, currY, rows, cols, board) {
   const newboard = [...board];
   for (let x = 0; x < rows; x++) {
     for (let y = 0; y < cols; y++) {
@@ -93,5 +79,6 @@ export function revealMines(rows, cols, board) {
       }
     }
   }
+  newboard[currX][currY][6] = true; //set only current cell to red
   return newboard;
 }

@@ -12,7 +12,7 @@ import {
 function App() {
   const [rows, setRows] = useState(15); //row count
   const [cols, setCols] = useState(15); //col count
-  const [mines, setMines] = useState(55); //mine count
+  const [mines, setMines] = useState(35); //mine count
   const [board, setBoard] = useState(boardBuilder(rows, cols, mines)); //board 2d array of data
   const [stop, setStop] = useState(false); //is game over or not
   const [fresh, setFresh] = useState(true); //started or not
@@ -31,7 +31,7 @@ function App() {
 
   //what to do if flipped
   const flip = (x, y) => (e) => {
-    if (stop) {
+    if (stop || board[x][y][5]) {
       //game over, no more clicking
       return;
     }
@@ -43,14 +43,16 @@ function App() {
     }
     if (board[x][y][2]) {
       //if landed on mine procedure
-      setBoard(revealMines(rows, cols, board));
+      setBoard(revealMines(x, y, rows, cols, board));
       setStop(true);
       setEmoji("😱");
+      return; //return so we don't set smiley emoji (last line of func)
     } else if (board[x][y][3]) {
       //no mine and still hidden procedure
       setBoard(flipCell(x, y, board, true));
       setEmoji("😝");
     }
+    setEmoji("😝"); //default smile to cancel wow face
   };
   //what to do if flagged
   const flag = (x, y) => (e) => {
@@ -69,6 +71,7 @@ function App() {
     }
   };
 
+  //do when restart
   const restart = () => {
     setStop(false);
     setFresh(true);
@@ -77,8 +80,8 @@ function App() {
     setTime(0);
     setEmoji("😝");
   };
-
-  const emojiWow = () => {
+  //self explanatory
+  const emojiWow = (cell) => {
     if (!stop) {
       setEmoji("😮");
     }

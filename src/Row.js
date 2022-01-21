@@ -1,4 +1,3 @@
-import React, { useEffect, useState } from "react";
 import Cell from "./Cell";
 
 function Row({ rowData, onClick, onContext, onmousedown }) {
