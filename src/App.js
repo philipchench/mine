@@ -10,15 +10,16 @@ import {
 } from "./BoardBuilder";
 
 function App() {
-  const [rows, setRows] = useState(15); //row count
-  const [cols, setCols] = useState(15); //col count
-  const [mines, setMines] = useState(35); //mine count
+  const [rows, setRows] = useState(9); //row count
+  const [cols, setCols] = useState(9); //col count
+  const [mines, setMines] = useState(10); //mine count
   const [board, setBoard] = useState(boardBuilder(rows, cols, mines)); //board 2d array of data
   const [stop, setStop] = useState(false); //is game over or not
   const [fresh, setFresh] = useState(true); //started or not
   const [minesLeft, setMinesLeft] = useState(mines); //mines left for display
   const [time, setTime] = useState(0); //timer
   const [emoji, setEmoji] = useState("😝"); //emoji on restart button
+  const [uncovered, setUncovered] = useState(0);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -31,6 +32,7 @@ function App() {
 
   //what to do if flipped
   const flip = (x, y) => (e) => {
+    let currUncovered = uncovered;
     if (stop || board[x][y][5]) {
       //game over, no more clicking
       return;
@@ -49,10 +51,18 @@ function App() {
       return; //return so we don't set smiley emoji (last line of func)
     } else if (board[x][y][3]) {
       //no mine and still hidden procedure
-      setBoard(flipCell(x, y, board, true));
-      setEmoji("😝");
+      const result = flipCell(x, y, board, true);
+      setBoard(result[0]);
+      setUncovered(uncovered + result[1]);
+      currUncovered += result[1];
     }
     setEmoji("😝"); //default smile to cancel wow face
+    console.log(uncovered);
+    if (currUncovered >= rows * cols - mines) {
+      console.log("hi");
+      setEmoji("😎");
+      setStop(true);
+    }
   };
   //what to do if flagged
   const flag = (x, y) => (e) => {
@@ -69,6 +79,7 @@ function App() {
     } else {
       setMinesLeft(minesLeft + 1); //increment if unflag
     }
+    setEmoji("😝");
   };
 
   //do when restart
@@ -79,6 +90,7 @@ function App() {
     setMinesLeft(mines);
     setTime(0);
     setEmoji("😝");
+    setUncovered(0);
   };
   //self explanatory
   const emojiWow = (cell) => {

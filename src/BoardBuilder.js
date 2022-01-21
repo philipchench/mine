@@ -1,6 +1,5 @@
 //builds a 2d array that contains board data
 export function boardBuilder(rows, cols) {
-  console.log("boardbuilder");
   const board = [];
   //cell data: [row, col, isMine, isHidden, number, flag, red]
   for (let x = 0; x < rows; x++) {
@@ -25,8 +24,7 @@ export function plantMines(rows, cols, x, y, mines, board) {
       !newboard[mineX][mineY][2] &&
       !(Math.abs(mineX - x) <= 1 && Math.abs(mineY - y) <= 1)
     ) {
-      //if no bomb, place bomb
-      console.log(mineX, mineY);
+      //if no bomb and not neighbor, place bomb
       newboard[mineX][mineY][2] = 1;
       count++;
     }
@@ -34,8 +32,10 @@ export function plantMines(rows, cols, x, y, mines, board) {
   return newboard;
 }
 
+//flip cell procedure, recursive
 export function flipCell(x, y, board, isState) {
   let newboard = board;
+  let flipped = 1;
   if (isState) {
     //only first call will make deep copy (can't directly alter React hook state)
     //the rest of the calls can directly mutate newboard
@@ -47,12 +47,14 @@ export function flipCell(x, y, board, isState) {
     for (let xNbr = -1; xNbr <= 1; xNbr++) {
       for (let yNbr = -1; yNbr <= 1; yNbr++) {
         if (newboard[x + xNbr]?.[y + yNbr] && newboard[x + xNbr][y + yNbr][3]) {
-          flipCell(x + xNbr, y + yNbr, newboard, false);
+          const result = flipCell(x + xNbr, y + yNbr, newboard, false);
+          flipped += result[1];
         }
       }
     }
   }
-  return newboard;
+  console.log("fillpped", flipped);
+  return [newboard, flipped];
 }
 
 function setNum(x, y, board) {
